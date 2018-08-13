@@ -1,0 +1,87 @@
+This text file gives a detailed description of the software package NeuronTransportIGA, 
+to perform material transport simulation on complex neuron geometry.
+The package contains four folders for different stages of the simulation pipeline. 
+User should follow the steps to finish the whole simulation workflow:
+
+1.meshgeneration (Matlab)
+(1)Description: this code is used to smooth the neuron skeleton and generate hexahedral
+				mesh for IGA simulation.
+					 
+(2)Input: *.swc(neuron skeleton information)		
+   Output: controlmesh.vtk (control mesh file)
+		   
+(3)To run: (i)download TREES_Toolbox from: http://www.treestoolbox.org/ and put it inside the meshgeneration directory.
+		   (ii)use TreeSmooth.m as the code for smoothing neuron skeleton and generate *_smooth.swc file.
+				user need to set smooth parameters, input/output path and skeleton file name.
+		   (iii)use Hexmesh_main.m as the code to generate the mesh for smoothed skeleton.
+				user need to set bifurcation refinement parameters, input/output path and skeleton file name.
+(4)Notes: The neuron skeleton dataset can be downloaded from NeuroMorpho.org: http://neuromorpho.org/	
+		Before using the downloaded dataset, user needs to visualize the skeleton using TREES Toolbox and 
+		check the skeleton to make sure the geometry only has bifurcation structure and has no overlap. 
+		The bad geometry needs manually modifying right now.
+		  
+2.spline (C++)
+(1)Description: this code is used to construct B-spline and extract Bezier information 
+					 for IGA based on the input controlmesh.
+					 
+(2)Input: controlmesh.vtk (control mesh file)
+   Output: bzpt.txt (Bezier point information)
+		   cmat.txt (The matrix from Bezier extraction)
+		   bzmeshinfo.txt (Bezier element connectivity, used for mesh partition)
+		   
+(3)To compile: make (requires Eigen library: http://eigen.tuxfamily.org/index.php?title=Main_Page)
+
+(4)To run: ./spline meshfilepath(the path that contains the controlmesh.vtk)
+		example: ./spline ../io/bifurcation/
+		
+3.METIS (C++)
+(1)Description: The open source library METIS are used to partition the mesh for parallel computing.
+		Link to METIS: http://glaros.dtc.umn.edu/gkhome/metis/metis/overview
+(2)Input: bzmeshinfo.txt  (Bezier mesh information)
+   Output: bzmeshinfo.txt.epart.nparts (mesh partition file)
+(3)To run： User can use the stand-alone program mpmetis in METIS library to partition a mesh into 
+		a specified number of parts.
+		example: mpmetis ../io/bifurcation/bzmeshinfo.txt 56
+		
+4.nsvms (C++)
+(1)Description: this code is used to derive velocity field by solving incompressible
+				steady-state Navier-Stokes equation. The code is paralleled using MPI to 
+				accelerate the computation.
+				
+(2)Input: controlmesh.vtk  (control mesh file)
+		  bzmeshinfo.txt.epart.nparts (mesh partition file)
+		  bzpt.txt & cmat.txt (Bezier extraction information)
+		  initial_velocity.txt (initial velocity information)
+		  parameter.txt (parameter settings for the model)
+   Output:  controlmesh_VelocityPressure_0.vtk (Velocity field on control mesh for visualization)
+			final_physics_VelocityPressureBezier.vtk (Velocity field in physical domain for visualization)
+			velocityfield.txt (Velocity information for transport simulation)
+
+(3)To compile: make (requires petsc 3.6.1: https://www.mcs.anl.gov/petsc/)
+
+(4)To run: mpiexec -np process_num ./nsvms meshfilepath process_num
+		example: mpiexec -np 56 ./nsvms ../io/bifurcation/ 56
+		
+5.transport (C++)
+(1)Description: this code is used to perform transport simulation and obtain concentration result.
+				The code is paralleled using MPI to accelerate the computation. 
+				
+(2)Input: controlmesh.vtk  (control mesh file)
+		  bzmeshinfo.txt.epart.nparts (mesh partition file)
+		  bzpt.txt & cmat.txt (Bezier extraction information)
+		  velocity.txt (velocity field information)
+		  parameter.txt (parameter settings for the model)
+   Output:  controlmesh_allparticle_*.vtk (Concentration for visualization)
+			the output path name is set using all parameters value
+			
+(3)To compile: make (requires petsc 3.6.1: https://www.mcs.anl.gov/petsc/)
+
+(4)To run: mpiexec -np process_num ./transport meshfilepath process_num
+		example: mpiexec -np 56 ./transport ../io/bifurcation/ 56
+
+The solver code uses parallel computation (MPI) to accelerate computation. 
+All result .vtk files are tested and can be opened in Paraview 5.4.0: https://www.paraview.org/
+
+
+
+
