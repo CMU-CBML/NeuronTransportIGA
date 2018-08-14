@@ -4,7 +4,7 @@ The package contains four subfolders for different stages of the simulation pipe
 User should follow the steps to finish the whole simulation workflow:
 
 1.meshgeneration (Matlab)
-(1)Description: this code is used to smooth the neuron skeleton and generate hexahedral	mesh for IGA simulation.
+(1)Description: this code is used to smooth the neuron skeleton and generate hexahedral mesh for IGA simulation.
 					 
 (2)Input: *.swc(neuron skeleton information)		
   Output: controlmesh.vtk (control mesh file)
