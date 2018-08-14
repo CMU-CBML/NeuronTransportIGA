@@ -12,10 +12,7 @@ public:
 	BSplineBasis(int deg,const vector<double>& v);
 	void Set(int deg,const vector<double>& v);
 	bool Check(int deg,const vector<double>& v);
-	//int FindSpan(double par);
-	//void Evaluate(double par,int deriv,vector<double>& val);
 	void BasisFunction(int pos,double par,int deriv,vector<double>& val);
-	//void test();
 	
 private:
 	int p;//polynomial order

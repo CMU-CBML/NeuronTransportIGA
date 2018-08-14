@@ -2,23 +2,18 @@
 
 typedef unsigned int uint;
 
-void kernel::run_coupling_comp(string fn_in)
+void kernel::run(string fn_in)
 {
 	vector<BezierElement3D> bzmesh;
 	vector<int> IDBC;
 	vector<double> gh;
-	Run_Coupling_Comp(fn_in, 0, bzmesh, IDBC, gh);
-	OutputMesh_Coupling(bzmesh, fn_in);
-}
-
-void kernel::Run_Coupling_Comp(string fn, int nrf, vector<BezierElement3D>& bzmesh, vector<int>& IDBC, vector<double>& gh)
-{
-	InitializeMeshLabel(fn);
+	InitializeMesh(fn_in);
 	BuildSplines_Unstruct();
-	BezierExtract_Comp(bzmesh, IDBC, gh);
+	BezierExtract(bzmesh, IDBC, gh);
+	OutputMesh(bzmesh, fn_in);
 }
 
-void kernel::BezierExtract_Comp(vector<BezierElement3D>& bzmesh, vector<int>& IDBC, vector<double>& gh)
+void kernel::BezierExtract(vector<BezierElement3D>& bzmesh, vector<int>& IDBC, vector<double>& gh)
 {
 	vector<int> aflag(cp.size(), 0);
 	vector<int> aloc(cp.size(), -1);
@@ -90,8 +85,6 @@ void kernel::BezierExtract_Comp(vector<BezierElement3D>& bzmesh, vector<int>& ID
 		{
 			cout << eid << " ";
 		}
-		//find types of interfaces
-		//if (tmesh[eid].bzflag == 1)
 		if (tmesh[eid].bzflag == 0)
 		{
 			for (int k = 0; k < 6; k++)
@@ -101,16 +94,6 @@ void kernel::BezierExtract_Comp(vector<BezierElement3D>& bzmesh, vector<int>& ID
 					bzmesh[eid].bc[k] = 1;//boundary face for boundary condition
 										  //bzmesh[eid].bcflag = 1;
 				}
-				//else if (tmface[tmesh[eid].face[k]].hex.size() == 2)
-				//{
-				//	int hxnb(tmface[tmesh[eid].face[k]].hex[0]);
-				//	if (hxnb == eid) hxnb = tmface[tmesh[eid].face[k]].hex[1];
-				//	if (tmesh[hxnb].bzflag == 0)
-				//	{
-				//		bzmesh[eid].bc[k] = 2;//coupling interface
-				//		bzmesh[eid].bzcouple = 1;
-				//	}
-				//}
 			}
 		}
 
@@ -615,7 +598,7 @@ void kernel::BuildElementSplines_Boundary(int eid)
 	}
 }
 
-void kernel::OutputMesh_Coupling(const vector<BezierElement3D>& bzmesh, string fn)
+void kernel::OutputMesh(const vector<BezierElement3D>& bzmesh, string fn)
 {
 	int cn[8] = { 0, 3, 15, 12, 48, 51, 63, 60 };
 	string fname = fn + "bzmesh.vtk";
@@ -695,20 +678,6 @@ void kernel::OutputMesh_Coupling(const vector<BezierElement3D>& bzmesh, string f
 		fout << bzmesh.size() << "\n";
 		for (uint i = 0; i<bzmesh.size(); i++)
 		{
-
-			//fout << i << " " << bzmesh[i].IENb.size() << " " << bzmesh[i].IEN.size() << "\n";
-			//for (uint l = 0; l < bzmesh[i].IENb.size(); l++)
-			//{
-			//	fout << bzmesh[i].IENb[l];
-			//	if (l == bzmesh[i].IENb.size() - 1)
-			//	{
-			//		fout << "\n";
-			//	}
-			//	else
-			//	{
-			//		fout << " ";
-			//	}
-			//}
 			fout << i << " " << bzmesh[i].IEN.size() << " " << bzmesh[i].type << "\n";
 			for (uint l = 0; l < bzmesh[i].IEN.size(); l++)
 			{
@@ -765,36 +734,9 @@ void kernel::OutputMesh_Coupling(const vector<BezierElement3D>& bzmesh, string f
 	{
 		cerr << "Can't open " << fname2 << '\n';
 	}
-	//string fname1(fn + "_mp.vtk");
-	////ofstream fout;
-	//fout.open(fname1.c_str());
-	//if (fout.is_open())
-	//{
-	//	fout << "# vtk DataFile Version 2.0\nMeshfree nodes\nASCII\nDATASET UNSTRUCTURED_GRID\n";
-	//	fout << "POINTS " << mp.size() << " float\n";
-	//	for (uint i = 0; i<mp.size(); i++)
-	//	{
-	//		fout << mp[i].coor[0] << " " << mp[i].coor[1] << " " << mp[i].coor[2] << "\n";
-	//	}
-	//	fout << "\nCELLS " << mp.size() << " " << 2 * mp.size() << '\n';
-	//	for (uint i = 0; i<mp.size(); i++)
-	//	{
-	//		fout << "1 " << i << "\n";
-	//	}
-	//	fout << "\nCELL_TYPES " << mp.size() << '\n';
-	//	for (uint i = 0; i < mp.size(); i++)
-	//	{
-	//		fout << "1\n";
-	//	}
-	//	fout.close();
-	//}
-	//else
-	//{
-	//	cerr << "Can't open " << fname1 << '\n';
-	//}
 }
 
-void kernel::InitializeMeshLabel(string fn)
+void kernel::InitializeMesh(string fn)
 {
 	//read hex vtk
 	string fname(fn + "controlmesh.vtk"), stmp;

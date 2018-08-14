@@ -12,7 +12,7 @@ int main(int argc, char **argv)
 		ss << argv[1];
 		ss >> file_in;
 		kernel app;
-		app.run_coupling_comp(file_in);
+		app.run(file_in);
 		cout << "DONE!\n";
 		//getchar();
 	}

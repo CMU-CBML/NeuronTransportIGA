@@ -187,9 +187,7 @@ class Element2D
 {
 public:
 	int cnct[4];
-	//vector<vector<int>> edge;
 	int edge[4];
-	//vector<vector<int>> edge_act;
 	int act;
 	//int aff;
 	int type;//0 for square, 1 for rectangular, 2 for non-corner boundary, 3 for corner boundary, 4 for extraordinary, 5 for invalid
@@ -197,7 +195,6 @@ public:
 	int prt;
 	vector<int> chd;
 	vector<array<double,2>> chd_o;
-	//vector<array<int,2>> Tjunc;//[edge pos,id]
 	vector<int> node;
 	vector<ELCS2D> lcs;//local coordinate system for each node
 	vector<int> IEN;
@@ -209,11 +206,8 @@ public:
 	vector<array<double,5>> patch_kutmp;
 	vector<array<double,5>> patch_kvtmp;
 
-	//vector<int> IENb;//global index of Bezier control points
-
 	Element2D();
 	bool operator==(const Element2D& e);
-	//Element& operator=(const Element& e);
 };
 
 class Element3D//one element at most contains one extraordinary edge
@@ -235,8 +229,6 @@ public:
 	int smth;
 	vector<int> chd;
 	vector<array<double,3>> chd_o;
-	//vector<array<int,2>> TjuncF;//[face pos, id]
-	//vector<array<int,2>> TjuncE;//[edge pos, id]
 	vector<int> IEN;//order in the desired way, in each hierarchy!
 	vector<int> node;//all points, including T-junctions
 	vector<Matrix4d> lcs;//local coordinate system for each node
@@ -267,10 +259,6 @@ public:
 	vector<int> IENb_loc;//paired with IENb in transition element when only C0 Bezier added
 	int bzflag;//0 for non-Bezier patch, 1 for Bezier
 	vector<int> IENc01;//C0 and C1 splines
-	//vector<int> IENc01_b;//boundary C0 and C1 splines
-	//vector<int> IENc0_loc;
-	//vector<int> IENc0;//C0 splines
-	//vector<int> IENc1;//C1 splines
 	vector<int> IENc2;//C2 splines with truncation
 	vector<vector<double>> cmat;//Bezier extraction matrix, "C0", "C1" and "C2" splines to C0 Bezier
 
@@ -291,20 +279,12 @@ public:
 	int nbf;
 	int prt;
 	vector<array<double,3>> pts;
-	//double pts[16][3];
-	//double pts4[25][3];
 	vector<int> IEN;
 	vector<vector<double>> cmat;
-	//vector<array<double,16>> cmat;
-	//vector<array<double,25>> cmat4;
 	void BezierPolyn(double u, vector<double>& Nu, vector<double>& dNdu) const;
 	void Basis(double u, double v, vector<double>& Nt, vector<array<double,2>>& dNdt) const;
-	//void Basis(double u, double v, double Nx[16], double dNdx[16][2]) const;
-	//void Basis4(double u, double v, double Nx[25], double dNdx[25][2]) const;
 	void Para2Phys(double u, double v, double pt[3]);
-	//void Para2Phys4(double u, double v, double pt[3]);
 	void SurfPointNormal(double u, double v, array<double,3>& pt, array<double,3>& nm) const;
-	//void SurfPointNormal4(double u, double v, array<double,3>& pt, array<double,3>& nm) const;
 };
 
 class BezierElement3D
@@ -374,25 +354,6 @@ public:
 	array<double, 3> coor;
 	double a;
 };
-
-//class PointIPP
-//{
-//public:
-//	int index[2];//index space
-//	double pm[2];//parameter space
-//	//double coor[3];//physical coordinates
-//	bool operator==(const PointIPP& pt);
-//};
-
-//bool ComparePointIPPu(PointIPP ipp1, PointIPP ipp2)
-//{
-//	return (ipp1.pm[0] < ipp2.pm[0]);
-//}
-//
-//bool ComparePointIPPv(PointIPP ipp1, PointIPP ipp2)
-//{
-//	return (ipp1.pm[1] < ipp2.pm[1]);
-//}
 
 class RegularPatchBasis
 {

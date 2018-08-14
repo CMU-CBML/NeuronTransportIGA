@@ -6,11 +6,8 @@ Edge::Edge()
 {
 	act=1;
 	pt[0]=-1; pt[1]=-1;
-	//face[0]=-1; face[1]=-1;
 	lev=0;
 	len=1.;
-	//pned[0]=-1; pned[1]=-1;
-	//pnfc[0]=-1; pnfc[1]=-1;
 	pn[0][0]=3; pn[1][0]=3;//0 for edge, 1 for face (1st edge diretion), 2 for face (2nd edge direction), 3 for end
 	pn[0][1]=-1; pn[1][1]=-1;//edge or face ID
 	prt=-1;
@@ -270,18 +267,6 @@ void Element3D::Initialize()
 	}
 }
 
-//bool PointIPP::operator==(const PointIPP& pt)
-//{
-//	if(index[0]==pt.index[0] && index[1]==pt.index[1] && pm[0]==pt.pm[0] && pm[1]==pt.pm[1])
-//	{
-//		return true;
-//	}
-//	else
-//	{
-//		return false;
-//	}
-//}
-
 ////////////////////////////////////////////////////////////////
 
 BezierElement2D::BezierElement2D(int p)
@@ -294,10 +279,6 @@ BezierElement2D::BezierElement2D(int p)
 	{
 		pts[i][0]=0.; pts[i][1]=0.; pts[i][2]=0.;
 	}
-	//for(int i=0;i<25;i++)
-	//{
-	//	pts4[i][0]=0.; pts4[i][1]=0.; pts4[i][2]=0.;
-	//}
 }
 
 void BezierElement2D::BezierPolyn(double u, vector<double>& Nu, vector<double>& dNdu) const
@@ -348,25 +329,6 @@ void BezierElement2D::Basis(double u, double v, vector<double>& Nt, vector<array
 	}
 }
 
-//void BezierElement::Basis4(double u, double v, double Nt[25], double dNdt[25][2]) const
-//{
-//	double Nu[5]={(1.-u)*(1.-u)*(1.-u)*(1.-u),4.*(1.-u)*(1.-u)*(1.-u)*u,6.*(1.-u)*(1.-u)*u*u,4.*(1.-u)*u*u*u,u*u*u*u};
-//	double Nv[5]={(1.-v)*(1.-v)*(1.-v)*(1.-v),4.*(1.-v)*(1.-v)*(1.-v)*v,6.*(1.-v)*(1.-v)*v*v,4.*(1.-v)*v*v*v,v*v*v*v};
-//	double dNdu[5]={-4.*(1.-u)*(1.-u)*(1.-u),4.*(1.-u)*(1.-u)*(1.-4.*u),12.*u*(1.-3.*u+2.*u*u),4.*(3.-4.*u)*u*u,4.*u*u*u};
-//	double dNdv[5]={-4.*(1.-v)*(1.-v)*(1.-v),4.*(1.-v)*(1.-v)*(1.-4.*v),12.*v*(1.-3.*v+2.*v*v),4.*(3.-4.*v)*v*v,4.*v*v*v};
-//	int i,j,loc(0);
-//	for(i=0;i<5;i++)
-//	{
-//		for(j=0;j<5;j++)
-//		{
-//			Nt[loc]=Nu[j]*Nv[i];
-//			dNdt[loc][0]=dNdu[j]*Nv[i];
-//			dNdt[loc][1]=Nu[j]*dNdv[i];
-//			loc++;
-//		}
-//	}
-//}
-
 void BezierElement2D::Para2Phys(double u, double v, double pt[3])
 {
 	vector<double> Nt;
@@ -381,19 +343,6 @@ void BezierElement2D::Para2Phys(double u, double v, double pt[3])
 	}
 }
 
-//void BezierElement::Para2Phys4(double u, double v, double pt[3])
-//{
-//	double Nx[25];
-//	double dNdt[25][2];
-//	Basis4(u,v,Nx,dNdt);
-//	pt[0]=0.; pt[1]=0.; pt[2]=0.;
-//	for(int i=0;i<25;i++)
-//	{
-//		pt[0]+=pts4[i][0]*Nx[i];
-//		pt[1]+=pts4[i][1]*Nx[i];
-//		pt[2]+=pts4[i][2]*Nx[i];
-//	}
-//}
 
 void BezierElement2D::SurfPointNormal(double u, double v, array<double,3>& pt, array<double,3>& nm) const
 {
@@ -528,33 +477,6 @@ void BezierElement3D::GeomMap(const array<double, 3>& u, array<double, 3>& pt) c
 		pt[2] += pts[i][2] * Nt[i];
 	}
 }
-
-//void BezierElement::SurfPointNormal4(double u, double v, array<double,3>& pt, array<double,3>& nm) const
-//{
-//	double Nx[25];
-//	double dNdt[25][2];
-//	Basis4(u,v,Nx,dNdt);
-//	pt[0]=0.; pt[1]=0.; pt[2]=0.;
-//	nm[0]=0.; nm[1]=0.; nm[2]=0.;
-//	double nmtmp[2][3]={{0.,0.,0.},{0.,0.,0.}};
-//	for(int i=0;i<25;i++)
-//	{
-//		pt[0]+=pts4[i][0]*Nx[i];
-//		pt[1]+=pts4[i][1]*Nx[i];
-//		pt[2]+=pts4[i][2]*Nx[i];
-//		nmtmp[0][0]+=pts4[i][0]*dNdt[i][0];
-//		nmtmp[0][1]+=pts4[i][1]*dNdt[i][0];
-//		nmtmp[0][2]+=pts4[i][2]*dNdt[i][0];
-//		nmtmp[1][0]+=pts4[i][0]*dNdt[i][1];
-//		nmtmp[1][1]+=pts4[i][1]*dNdt[i][1];
-//		nmtmp[1][2]+=pts4[i][2]*dNdt[i][1];
-//	}
-//	nm[0]=nmtmp[0][1]*nmtmp[1][2]-nmtmp[0][2]*nmtmp[1][1];
-//	nm[1]=nmtmp[0][2]*nmtmp[1][0]-nmtmp[0][0]*nmtmp[1][2];
-//	nm[2]=nmtmp[0][0]*nmtmp[1][1]-nmtmp[0][1]*nmtmp[1][0];
-//	double len=sqrt(nm[0]*nm[0]+nm[1]*nm[1]+nm[2]*nm[2]);
-//	nm[0]/=len; nm[1]/=len; nm[2]/=len;
-//}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

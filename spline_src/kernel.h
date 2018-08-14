@@ -14,7 +14,7 @@ using namespace std;
 class kernel
 {
 public:
-	void run_coupling_comp(string fn_in);//comparison using B-splines-like	
+	void run(string fn_in);//comparison using B-splines-like	
 	
 private:
 	vector<Vertex3D> cp;//control points
@@ -24,13 +24,12 @@ private:
 	vector<Face3D> tmface;
 	vector<array<double, 3>> bzcp;//Bezier control points
 
-	void Run_Coupling_Comp(string fn, int nrf, vector<BezierElement3D>& bzmesh, vector<int>& IDBC, vector<double>& gh);
-	void OutputMesh_Coupling(const vector<BezierElement3D>& bzmesh, string fn);
-	void BezierExtract_Comp(vector<BezierElement3D>& bzmesh, vector<int>& IDBC, vector<double>& gh);
+	void OutputMesh(const vector<BezierElement3D>& bzmesh, string fn);
+	void BezierExtract(vector<BezierElement3D>& bzmesh, vector<int>& IDBC, vector<double>& gh);
 	void BuildSplines_Unstruct();
 	void BuildElementSplines_Interior(int eid);
 	void BuildElementSplines_Boundary(int eid);
-	void InitializeMeshLabel(string fn);
+	void InitializeMesh(string fn);
 	void RescaleDomain();
 	void InitialConnect();
 	void BuildInitialEdges();
