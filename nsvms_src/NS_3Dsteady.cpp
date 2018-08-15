@@ -1121,7 +1121,6 @@ void NS_3Dsteady::ResultCal_Bezier(double u, double v, double w, const Element3D
 	vector<array<array<double, 3>, 3>> dN2dx2;
 	bzel.Para2Phys(u, v, w, pt);
 	BasisFunction(u, v, w, bzel.IEN.size(), bzel.pts, bzel.cmat, Nx, dNdx,dN2dx2, dUdx, detJ);
-	pt[0] = 0.; pt[1] = 0.; pt[2] = 0.;
 	result[0] = 0.; result[1] = 0.; result[2] = 0.; result[3] = 0.;
 	for (uint i = 0; i < bzel.IEN.size(); i++)	{
 		result[0] += Nx[i] * (Vel[dim* bzel.IEN[i] + 0]);

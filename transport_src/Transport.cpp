@@ -178,7 +178,7 @@ void Transport::InitializeProblem(const int n_bz, vector<array<double, 3>> &velo
 	if (var.size() != 0)
 		par = var;
 	else
-		cerr << "0 variables!\n"; getchar();
+		cerr << "0 variables!\n";
 	dt = var[7];
 	nstep = var[8];
 	N_0 = N0_ini;
