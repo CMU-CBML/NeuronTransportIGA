@@ -19,15 +19,15 @@ User should follow the steps to finish the whole simulation workflow:
 	         Before using the downloaded dataset, user needs to visualize the skeleton using TREES Toolbox and 
 	         check the skeleton to make sure the geometry only has bifurcation structure and has no overlap. 
 	         The bad geometry needs manually modifying right now.
-		  (ii)In mesh_parameter.txt, user need to set five parameters:
+	  (ii)In mesh_parameter.txt, user need to set five parameters:
 			 n_noisesmooth:      set iteration steps for noise smooth
 			 ratio_bifur_node:   set bifurcation nodes smooth ratio, range:0 to 1
 			 ratio_noisesmooth:  set noise smooth ratio, range:0 to 1
 			 seg_length:         set the bezier smooth segments length, the value mainly depends on the neuron scale
 			 ratio_refine:       set the parameter used to calculate the refinement around bifurcation region range:0 to 1 
-		  (iii)To obtain a good quality mesh, user needs to try several parameter settings for mesh generation. 
-			 User is recommended to check the scaled Jacobian of the mesh in Paraview before using it in simulation. 
-			 It's better to make sure the minimum scaled Jacobian is bigger than 0.1.
+	  (iii)To obtain a good quality mesh, user needs to try several parameter settings for mesh generation. 
+	 	User is recommended to check the scaled Jacobian of the mesh in Paraview before using it in simulation. 
+		It's better to make sure the minimum scaled Jacobian is bigger than 0.1.
 		  
 2.spline_src (C++)
 (1)Description: this code is used to construct B-spline and extract Bezier information for IGA based on the input controlmesh.
