@@ -3,23 +3,32 @@ clear;
 addpath(genpath(pwd));
 start_trees;
 %% User settings
-% Set smooth parameters
-n_noisesmooth=150;      % set iteration steps for noise smooth
-ratio_bifur_node=0.01;  % set bifurcation nodes smooth ratio
-ratio_noisesmooth=0.01; % set noise smooth ratio
-seg_length=0.9;         % set bezier smooth segments length 
 
-% input and output path setting
-io_path='..//example//3bifurcation//'; % user set the input and output path 
-    %io_path='..//example//cell3traceRN1//';
-    %io_path='..//example//nelson2//';
-    %io_path='..//example//purkinje_modify3//';
 
-input_file=[io_path,'skeleton.swc'];
+% Input and output path setting
+% io_path='..//example//cylinder//'; % Figure 3E
+io_path='..//example//bifurcation//'; % Figure 3F
+% io_path='..//example//3bifurcation//'; % Figure 3G
+% io_path='..//example//movie2//'; % Figure 5
+% io_path='..//example//movie5//'; % Figure 6
+% io_path='..//example//cell3traceRN1//';% Figure 7A
+% io_path='..//example//nelson2//';% Figure 7D
+% io_path='..//example//purkinje//';% Figure 7G
+
+parameter_file=[io_path,'mesh_parameter.txt'];
+input_file=[io_path,'skeleton_initial.swc'];
 smooth_file=[io_path,'skeleton_smooth.swc'];
 % tangent_file=[io_path,neuron_name,'_tangent.txt'];
 
+% Read skeleton information
 trees{1}=load_tree(input_file);
+
+% Set smooth parameters
+var=LoadParameter(parameter_file);
+n_noisesmooth=var(1);      % set iteration steps for noise smooth
+ratio_bifur_node=var(2);  % set bifurcation nodes smooth ratio
+ratio_noisesmooth=var(3); % set noise smooth ratio
+seg_length=var(4);         % set bezier smooth segments length 
 %% Extract coordinates and connection information
 tangent_vec=[];
 location=[trees{1}.X,trees{1}.Y,trees{1}.Z];
@@ -28,11 +37,11 @@ id=idpar_tree';
 id(1)=0;
 ipar=ipar_tree();
 
-branch_input=B_tree(trees{1});
+branch1=B_tree(trees{1});
 termination=T_tree(trees{1});
 [sect, vec]=dissect_tree(trees{1});
 [n_sect, tmp]= size(sect);
-[n_bif,tmp]=size(find(branch_input==1));
+[n_bif,tmp]=size(find(branch1==1));
 sect_point=cell(n_sect,1);
 bif_term_pt=cell(n_sect,1);
 bif_pt=cell(n_bif,1);
@@ -59,7 +68,7 @@ for sec_index=1:n_sect
     bif_term_start=1;
     bif_term_end=sect_ptnum;
     
-    if(branch_input(end_pt_index))
+    if(branch1(end_pt_index))
         par_node=id(end_pt_index);
         ans_tmp=find(trees{1}.dA(:,end_pt_index)==1);
         bifur1_node=ans_tmp(1);
@@ -68,6 +77,10 @@ for sec_index=1:n_sect
         index_bif=index_bif+1;
         bif_term_end=sect_ptnum-1;
     end
+    if(branch1(start_pt_index))
+        bif_term_start=2;
+    end
+    bif_term_pt{sec_index}=sect_point{sec_index}( bif_term_start: bif_term_end);
 end
 
 
@@ -141,7 +154,6 @@ for i=1:n_sect
     trees{2}=recon_tree(trees{2},sect_after(i,2),index,'none');
     tangent_vec=[tangent_vec;end_index tmp_tangent(end,:)];
 end
-
 
 [tmp_C, ia, ic]=unique(tangent_vec(:,1),'sorted');
 output_tangent=tangent_vec(ia,:);

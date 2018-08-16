@@ -1,6 +1,5 @@
 function [ P ] = RotateAroundAxis( Q, axis, angle )
-%UNTITLED5 Summary of this function goes here
-%   Detailed explanation goes here
+%RotateAroundAxis: rotate the geometry around defined axis with angle
 cos_alpha=axis(3)/sqrt(axis(1)^2+axis(2)^2+axis(3)^2);
 sin_alpha=sqrt(axis(1)^2+axis(2)^2)/sqrt(axis(1)^2+axis(2)^2+axis(3)^2);
 cos_beta=axis(1)/sqrt(axis(1)^2+axis(2)^2);

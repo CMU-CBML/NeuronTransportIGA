@@ -45,7 +45,7 @@ int main(int argc, char **argv)
 		string fn_mesh(path + "controlmesh.vtk");
 		string fn_bz(path + "bzmeshinfo.txt.epart." + stmp.str());
 		string fn_velocity(path + "initial_velocityfield.txt");		
-		string fn_parameter(path + "parameter.txt");
+		string fn_parameter(path + "simulation_parameter.txt");
 
 		UserSetting *user = new UserSetting;
 		user->SetVariables(fn_parameter, var);

@@ -3,20 +3,29 @@ clear;
 addpath(genpath(pwd));
 start_trees;
 %% User settings
-% parameter setting
-ratio=0.25; % the parameter used to calculate the refinement around bifurcation region
-
-% Input and output setting 
-io_path='..//example//3bifurcation//'; % user set the input and output path 
-    %io_path='..//example//cell3traceRN1//';
-    %io_path='..//example//nelson2//';
-    %io_path='..//example//purkinje_modify3//';
 
 
+% Input and output path setting
+% io_path='..//example//cylinder//'; % Figure 3E
+io_path='..//example//bifurcation//'; % Figure 3F
+% io_path='..//example//3bifurcation//'; % Figure 3G
+% io_path='..//example//movie2//'; % Figure 5
+% io_path='..//example//movie5//'; % Figure 6
+% io_path='..//example//cell3traceRN1//';% Figure 7A
+% io_path='..//example//nelson2//';% Figure 7D
+% io_path='..//example//purkinje//';% Figure 7G
+
+parameter_file=[io_path,'mesh_parameter.txt'];
 skeleton_input=[io_path,'skeleton_smooth.swc'];
 velocity_output=[io_path,'initial_velocityfield.txt'];
 hex_output=[io_path,'controlmesh.vtk'];
+
+% Read skeleton information
 load_tree(skeleton_input);
+
+% parameter setting
+var=LoadParameter(parameter_file);
+ratio_refine=var(5); % the parameter used to calculate the refinement around bifurcation region
 %% Extract skeleton information and initialize labels
 location=[trees{1}.X,trees{1}.Y,trees{1}.Z];
 d=trees{1}.D;
@@ -155,19 +164,19 @@ for i=1:ny
         if trees{1}.dA(i,j)~=0
             Segment_Vector{i,j}=location(i,:)-location(j,:);
             sv=location(i,:)-location(j,:);
-%             n_layer(i,j)=ceil(norm(Segment_Vector{i,j})/(d(j)*1.1));
-%             if(termination(i) || j==1)
-%                 n_layer(i,j)=ceil(norm(Segment_Vector{i,j})/(d(j)*0.25));
-%             end
-% set layer number for normal segments
+            %             n_layer(i,j)=ceil(norm(Segment_Vector{i,j})/(d(j)*1.1));
+            %             if(termination(i) || j==1)
+            %                 n_layer(i,j)=ceil(norm(Segment_Vector{i,j})/(d(j)*0.25));
+            %             end
+            % set layer number for normal segments
             n_layer(i,j)=1;
-% set layer number segments around bifurcation for refinement
-% the bifurcation diameter is used to calculate the total layer numbers 
+            % set layer number segments around bifurcation for refinement
+            % the bifurcation diameter is used to calculate the total layer numbers
             if(branch(i))
-                n_layer(i,j)=ceil(norm(Segment_Vector{i,j})/(d(i)*ratio));
+                n_layer(i,j)=ceil(norm(Segment_Vector{i,j})/(d(i)*ratio_refine));
             end
             if(branch(j))
-                n_layer(i,j)=ceil(norm(Segment_Vector{i,j})/(d(j)*ratio));
+                n_layer(i,j)=ceil(norm(Segment_Vector{i,j})/(d(j)*ratio_refine));
             end
         end
     end
@@ -434,9 +443,9 @@ for index_bif=1:n_bif
     NodeLayer{par_node,2}=tmp_e(:,1:4);
     NodeLayer{par_node,3}=tmp_e(:,1:4);
     NodeLayer{par_node,4}=cp1;
-% record the element information around bifurcation
+    % record the element information around bifurcation
     bif_ele(index_bif,2)=tmp_pointnumber;
-
+    
     
     % Save left terminal points and element
     if(termination(bifur1_node))
@@ -461,7 +470,7 @@ for index_bif=1:n_bif
     NodeLayer{bifur1_node,2}=tmp_e(:,1:4);
     NodeLayer{bifur1_node,3}=tmp_e(:,1:4);
     NodeLayer{bifur1_node,4}=cp1;
-% record the element information around bifurcation
+    % record the element information around bifurcation
     bif_ele(index_bif,3)=tmp_pointnumber;
     
     % Save right terminal points and element
@@ -486,8 +495,8 @@ for index_bif=1:n_bif
     NodeLayer{bifur2_node,2}=tmp_e(:,1:4);
     NodeLayer{bifur2_node,3}=tmp_e(:,1:4);
     NodeLayer{bifur2_node,4}=cp1;
-   % record the element information around bifurcation 
-    bif_ele(index_bif,4)=tmp_pointnumber;    
+    % record the element information around bifurcation
+    bif_ele(index_bif,4)=tmp_pointnumber;
 end
 
 %% Calculate layers for bif-term branches and bif-bif branches
@@ -562,7 +571,7 @@ if n_bif~=0
                 for ii=1:m1
                     tmp_p(ii,:)=template_p(ii,1)*ref_vec_next+template_p(ii,2)*w;
                 end
-                tmp_p=tmp_p*d(i)/2.;           
+                tmp_p=tmp_p*d(i)/2.;
                 
                 [tmp_pointnumber,tmp]=size(AllPoint);
                 
@@ -787,12 +796,12 @@ for index_bif=1:n_bif
         AllPoint(startpt_b+leftbc_index(i),:)=PointAlign(AllPoint(startpt_i+leftbc_index(i),:),AllPoint(startpt_j+leftbc_index(i),:),AllPoint(startpt_b+leftbc_index(i),:));
         AllPoint(startpt_b+rightbc_index(i),:)=PointAlign(AllPoint(startpt_i+rightbc_index(i),:),AllPoint(startpt_k+rightbc_index(i),:),AllPoint(startpt_b+rightbc_index(i),:));
     end
-            for i=1:2
-                AllPoint(startpt_b+extra_pt(i,1),:)=Projection(AllPoint(startpt_b+extra_pt(i,2),:),AllPoint(startpt_b+extra_pt(i,3),:),AllPoint(startpt_b+extra_pt(i,4),:),AllPoint(startpt_b+extra_pt(i,1),:));
-                AllPoint(startpt_i+extra_pt(i,1),:)=Projection(AllPoint(startpt_b+extra_pt(i,2),:),AllPoint(startpt_b+extra_pt(i,3),:),AllPoint(startpt_b+extra_pt(i,4),:),AllPoint(startpt_i+extra_pt(i,1),:));
-                AllPoint(startpt_j+extra_pt(i,1),:)=Projection(AllPoint(startpt_b+extra_pt(i,2),:),AllPoint(startpt_b+extra_pt(i,3),:),AllPoint(startpt_b+extra_pt(i,4),:),AllPoint(startpt_j+extra_pt(i,1),:));
-                AllPoint(startpt_k+extra_pt(i,1),:)=Projection(AllPoint(startpt_b+extra_pt(i,2),:),AllPoint(startpt_b+extra_pt(i,3),:),AllPoint(startpt_b+extra_pt(i,4),:),AllPoint(startpt_k+extra_pt(i,1),:));
-            end
+    for i=1:2
+        AllPoint(startpt_b+extra_pt(i,1),:)=Projection(AllPoint(startpt_b+extra_pt(i,2),:),AllPoint(startpt_b+extra_pt(i,3),:),AllPoint(startpt_b+extra_pt(i,4),:),AllPoint(startpt_b+extra_pt(i,1),:));
+        AllPoint(startpt_i+extra_pt(i,1),:)=Projection(AllPoint(startpt_b+extra_pt(i,2),:),AllPoint(startpt_b+extra_pt(i,3),:),AllPoint(startpt_b+extra_pt(i,4),:),AllPoint(startpt_i+extra_pt(i,1),:));
+        AllPoint(startpt_j+extra_pt(i,1),:)=Projection(AllPoint(startpt_b+extra_pt(i,2),:),AllPoint(startpt_b+extra_pt(i,3),:),AllPoint(startpt_b+extra_pt(i,4),:),AllPoint(startpt_j+extra_pt(i,1),:));
+        AllPoint(startpt_k+extra_pt(i,1),:)=Projection(AllPoint(startpt_b+extra_pt(i,2),:),AllPoint(startpt_b+extra_pt(i,3),:),AllPoint(startpt_b+extra_pt(i,4),:),AllPoint(startpt_k+extra_pt(i,1),:));
+    end
 end
 %% Output Mesh
 %write the vtk file for view
