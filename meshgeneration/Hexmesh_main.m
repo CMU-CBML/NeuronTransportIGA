@@ -6,18 +6,14 @@ start_trees;
 % parameter setting
 ratio=0.25; % the parameter used to calculate the refinement around bifurcation region
 
-% Input and output setting
-io_path='..//io//bifurcation1//'; % user set the input and output path 
-neuron_name='bifurcation1'; % user set the input skeleton file name
-    % neuron_name='cell3traceRN1';
-    % neuron_name='purkinje_modify3';
-    % neuron_name='purkinje_modify2_beziersmooth';
-    % neuron_name='nelson2';
+% Input and output setting 
+io_path='..//example//3bifurcation//'; % user set the input and output path 
+    %io_path='..//example//cell3traceRN1//';
+    %io_path='..//example//nelson2//';
+    %io_path='..//example//purkinje_modify3//';
 
 
-skeleton_input=[io_path,neuron_name,'_skeleton.swc'];
-skeleton_input=[io_path,neuron_name,'_smooth.swc'];
-
+skeleton_input=[io_path,'skeleton_smooth.swc'];
 velocity_output=[io_path,'initial_velocityfield.txt'];
 hex_output=[io_path,'controlmesh.vtk'];
 load_tree(skeleton_input);
@@ -791,13 +787,12 @@ for index_bif=1:n_bif
         AllPoint(startpt_b+leftbc_index(i),:)=PointAlign(AllPoint(startpt_i+leftbc_index(i),:),AllPoint(startpt_j+leftbc_index(i),:),AllPoint(startpt_b+leftbc_index(i),:));
         AllPoint(startpt_b+rightbc_index(i),:)=PointAlign(AllPoint(startpt_i+rightbc_index(i),:),AllPoint(startpt_k+rightbc_index(i),:),AllPoint(startpt_b+rightbc_index(i),:));
     end
-    %         for i=1:2
-    %             AllPoint(startpt_b+extra_pt(i,1),:)=Projection(AllPoint(startpt_b+extra_pt(i,2),:),AllPoint(startpt_b+extra_pt(i,3),:),AllPoint(startpt_b+extra_pt(i,4),:),AllPoint(startpt_b+extra_pt(i,1),:));
-    %             AllPoint(startpt_i+extra_pt(i,1),:)=Projection(AllPoint(startpt_b+extra_pt(i,2),:),AllPoint(startpt_b+extra_pt(i,3),:),AllPoint(startpt_b+extra_pt(i,4),:),AllPoint(startpt_i+extra_pt(i,1),:));
-    %             AllPoint(startpt_j+extra_pt(i,1),:)=Projection(AllPoint(startpt_b+extra_pt(i,2),:),AllPoint(startpt_b+extra_pt(i,3),:),AllPoint(startpt_b+extra_pt(i,4),:),AllPoint(startpt_j+extra_pt(i,1),:));
-    %             AllPoint(startpt_k+extra_pt(i,1),:)=Projection(AllPoint(startpt_b+extra_pt(i,2),:),AllPoint(startpt_b+extra_pt(i,3),:),AllPoint(startpt_b+extra_pt(i,4),:),AllPoint(startpt_k+extra_pt(i,1),:));
-    %         end
-    %     end
+            for i=1:2
+                AllPoint(startpt_b+extra_pt(i,1),:)=Projection(AllPoint(startpt_b+extra_pt(i,2),:),AllPoint(startpt_b+extra_pt(i,3),:),AllPoint(startpt_b+extra_pt(i,4),:),AllPoint(startpt_b+extra_pt(i,1),:));
+                AllPoint(startpt_i+extra_pt(i,1),:)=Projection(AllPoint(startpt_b+extra_pt(i,2),:),AllPoint(startpt_b+extra_pt(i,3),:),AllPoint(startpt_b+extra_pt(i,4),:),AllPoint(startpt_i+extra_pt(i,1),:));
+                AllPoint(startpt_j+extra_pt(i,1),:)=Projection(AllPoint(startpt_b+extra_pt(i,2),:),AllPoint(startpt_b+extra_pt(i,3),:),AllPoint(startpt_b+extra_pt(i,4),:),AllPoint(startpt_j+extra_pt(i,1),:));
+                AllPoint(startpt_k+extra_pt(i,1),:)=Projection(AllPoint(startpt_b+extra_pt(i,2),:),AllPoint(startpt_b+extra_pt(i,3),:),AllPoint(startpt_b+extra_pt(i,4),:),AllPoint(startpt_k+extra_pt(i,1),:));
+            end
 end
 %% Output Mesh
 %write the vtk file for view

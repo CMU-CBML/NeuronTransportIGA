@@ -7,18 +7,17 @@ start_trees;
 n_noisesmooth=150;      % set iteration steps for noise smooth
 ratio_bifur_node=0.01;  % set bifurcation nodes smooth ratio
 ratio_noisesmooth=0.01; % set noise smooth ratio
-seg_length=0.5;         % set bezier smooth segments length 
+seg_length=0.9;         % set bezier smooth segments length 
 
 % input and output path setting
-io_path='..//io//bifurcation1//'; % user set the input and output path 
-neuron_name='bifurcation1';       % user set the input skeleton file name 
-    %neuron_name='cell3traceRN1';
-    %neuron_name='nelson2';
-    %neuron_name='purkinje_modify3';
+io_path='..//example//3bifurcation//'; % user set the input and output path 
+    %io_path='..//example//cell3traceRN1//';
+    %io_path='..//example//nelson2//';
+    %io_path='..//example//purkinje_modify3//';
 
-input_file=[io_path,neuron_name,'.swc'];
-smooth_file=[io_path,neuron_name,'_smooth.swc'];
-tangent_file=[io_path,neuron_name,'_tangent.txt'];
+input_file=[io_path,'skeleton.swc'];
+smooth_file=[io_path,'skeleton_smooth.swc'];
+% tangent_file=[io_path,neuron_name,'_tangent.txt'];
 
 trees{1}=load_tree(input_file);
 %% Extract coordinates and connection information
@@ -152,11 +151,11 @@ trees{1}.R(:,1)=2;
 trees{2}.R(:,1)=2;
 
 swc_tree(trees{2},smooth_file);
-fid4=fopen(tangent_file,'w');
-[n_vec,tmp]=size(output_tangent);
-for ii=1:n_vec
-    fprintf(fid4,'%f %f %f\n',output_tangent(ii,2:4));
-end
+% fid4=fopen(tangent_file,'w');
+% [n_vec,tmp]=size(output_tangent);
+% for ii=1:n_vec
+%     fprintf(fid4,'%f %f %f\n',output_tangent(ii,2:4));
+% end
 fclose('all');
 
 figure(1);clf;xplore_tree(trees{1})
