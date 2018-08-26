@@ -39,8 +39,13 @@ elseif mode==2
     if(1-sample_vec(end)>0.05)
         sample_vec=[sample_vec 1];
     end
-else
+elseif mode==3
     sample_vec=[0:1.0*seg_length/d:(1-D(end)/d) 1];
+elseif mode==4
+    sample_vec=[0:1.0*seg_length/d:1]
+    if(1-sample_vec(end)>0.05)
+        sample_vec=[sample_vec 1];
+    end
 end
 [tmp,n_sample]=size(sample_vec);
 

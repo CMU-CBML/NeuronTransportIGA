@@ -1,0 +1,5 @@
+n_noisesmooth 100      
+ratio_bifur_node 0.01   
+ratio_noisesmooth 0.001 
+seg_length 0.75         
+ratio_refine 0.5     

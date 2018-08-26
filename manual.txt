@@ -1,60 +1,61 @@
 This text file gives a detailed description of the software package NeuronTransportIGA, 
 to perform material transport simulation on complex neuron geometry.
-The package contains four subfolders for different stages of the simulation pipeline. 
+The package contains four subfolders for different stages of the simulation workflow. 
 User should follow the steps to finish the whole simulation workflow:
 
 1.meshgeneration (Matlab)
-(1)Description: this code is used to smooth the neuron skeleton and generate hexahedral mesh for IGA simulation.
+(1) Description: this code is used to smooth the neuron skeleton and generate the hexahedral mesh for IGA simulation.
 					 
-(2)Input: *.swc(neuron skeleton information)	
+(2) Input: *.swc (neuron skeleton information)	
 		  mesh_parameter.txt (parameter settings for generating the mesh)
   Output: controlmesh.vtk (control mesh file)
 		   
-(3)To run: (i)download TREES_Toolbox from: http://www.treestoolbox.org/ and put it inside the meshgeneration directory.
-           (ii)use TreeSmooth.m as the code for smoothing neuron skeleton and generate *_smooth.swc file.
-	       user need to set smooth parameters in mesh_parameter.txt and input/output path in TreeSmooth.m.
-           (iii)use Hexmesh_main.m as the code to generate the mesh for smoothed skeleton.
-		   user need to set bifurcation refinement parameters in mesh_parameter.txt and input/output path in Hexmesh_main.m.
-(4)Notes: (i)The neuron skeleton dataset can be downloaded from NeuroMorpho.org: http://neuromorpho.org/	
-	         Before using the downloaded dataset, user needs to visualize the skeleton using TREES Toolbox and 
-	         check the skeleton to make sure the geometry only has bifurcation structure and has no overlap. 
-	         The bad geometry needs manually modifying right now.
+(3) To run: (i)download TREES_Toolbox from: http://www.treestoolbox.org/ and put it inside ./meshgeneration directory.
+            (ii)use TreeSmooth.m as the code to smooth neuron skeleton and generate *_smooth.swc file.
+	        user need to set smooth parameters in mesh_parameter.txt and input/output path in TreeSmooth.m.
+            (iii)use Hexmesh_main.m as the code to generate the mesh using smoothed skeleton.
+		    user need to set bifurcation refinement parameters in mesh_parameter.txt and input/output path in Hexmesh_main.m.
+(4) Notes: (i)The neuron skeleton dataset can be downloaded from NeuroMorpho.org: http://neuromorpho.org/	
+	         Before using the dataset, user needs to visualize the skeleton using TREES Toolbox and 
+	         check the skeleton to make sure the geometry has only bifurcation structure and has no overlap. 
+	         The bad geometry needs manually modifying before smoothing.
 	  (ii)In mesh_parameter.txt, user need to set five parameters:
-			 n_noisesmooth:      set iteration steps for noise smooth
-			 ratio_bifur_node:   set bifurcation nodes smooth ratio, range:0 to 1
-			 ratio_noisesmooth:  set noise smooth ratio, range:0 to 1
-			 seg_length:         set the bezier smooth segments length, the value mainly depends on the neuron scale
-			 ratio_refine:       set the parameter used to calculate the refinement around bifurcation region range:0 to 1 
+			 n_noisesmooth:      set iteration steps to smooth noise, default: 100
+			 ratio_bifur_node:   set bifurcation nodes smooth ratio, range: 0 to 1
+			 ratio_noisesmooth:  set noise smooth ratio, range: 0 to 1
+			 seg_length:         set the Bezier smooth segments length, the value mainly depends on the neuron scale
+			 ratio_refine:       set the parameter used to calculate the refinement around bifurcation region range: 0 to 1 
 	  (iii)To obtain a good quality mesh, user needs to try several parameter settings for mesh generation. 
 	 	User is recommended to check the scaled Jacobian of the mesh in Paraview before using it in simulation. 
-		It's better to make sure the minimum scaled Jacobian is bigger than 0.1.
+		It's better to make sure the minimum scaled Jacobian is larger than 0.1.
 		  
 2.spline_src (C++)
-(1)Description: this code is used to construct B-spline and extract Bezier information for IGA based on the input controlmesh.
+(1) Description: this code is used to construct B-spline and obtain Bezier extraction information for IGA based on the input control mesh.
 					 
-(2)Input: controlmesh.vtk (control mesh file)
+(2) Input: controlmesh.vtk (control mesh file)
   Output: bzpt.txt (Bezier point information)
 	  cmat.txt (The matrix from Bezier extraction)
 	  bzmeshinfo.txt (Bezier element connectivity, used for mesh partition)
 		   
-(3)To compile: make (requires Eigen library: http://eigen.tuxfamily.org/index.php?title=Main_Page)
+(3) To compile: make (requires Eigen library: http://eigen.tuxfamily.org/index.php?title=Main_Page)
 
-(4)To run: ./spline meshfilepath(the path that contains the controlmesh.vtk)
+(4) To run: ./spline meshfilepath (the path that contains the controlmesh.vtk)
 		example: ./spline ../example/bifurcation/
 		
 3.METIS (C++)
-(1)Description: The open source library METIS is used to partition the mesh for parallel computing.
+(1) Description: The open source library METIS is used to partition the mesh for parallel computing.
 		Link to METIS: http://glaros.dtc.umn.edu/gkhome/metis/metis/overview
-(2)Input: bzmeshinfo.txt  (Bezier mesh information)
+(2) Input: bzmeshinfo.txt  (Bezier mesh information)
    Output: bzmeshinfo.txt.epart.nparts (mesh partition file)
-(3)To run： User can use the stand-alone program mpmetis in METIS library to partition a mesh into a specified number of parts.
+(3) To run： User can use the stand-alone program mpmetis in METIS library to partition the mesh.
+				mpmetis meshfile process_num (The number of parts that the mesh will be partitioned into)
 		example: mpmetis ../example/bifurcation/bzmeshinfo.txt 28
 		
 4.nsvms_src (C++)
-(1)Description: this code is used to derive velocity field by solving incompressible steady-state Navier-Stokes equation. 
+(1) Description: this code is used to obtain velocity field by solving incompressible steady-state Navier-Stokes equation. 
 		The code is paralleled using MPI to accelerate the computation.
 				
-(2)Input: controlmesh.vtk  (control mesh file)
+(2) Input: controlmesh.vtk  (control mesh file)
 	  bzmeshinfo.txt.epart.nparts (mesh partition file)
 	  bzpt.txt & cmat.txt (Bezier extraction information)
 	  initial_velocity.txt (initial velocity information)
@@ -63,32 +64,32 @@ User should follow the steps to finish the whole simulation workflow:
 	  final_physics_VelocityPressureBezier.vtk (Velocity field in physical domain for visualization)
 	  velocityfield.txt (Velocity information for transport simulation)
 
-(3)To compile: make (requires petsc 3.6.1: https://www.mcs.anl.gov/petsc/)
+(3) To compile: make (requires petsc 3.6.1: https://www.mcs.anl.gov/petsc/)
 
-(4)To run: mpiexec -np process_num ./nsvms meshfilepath process_num
+(4) To run: mpiexec -np process_num ./nsvms meshfilepath process_num
 		example: mpiexec -np 28 ./nsvms ../example/bifurcation/ 28
 		
 5.transport_src (C++)
-(1)Description: this code is used to perform transport simulation and obtain concentration result.
+(1) Description: this code is used to perform transport simulation and obtain concentration result.
 		The code is paralleled using MPI to accelerate the computation. 
 				
-(2)Input: controlmesh.vtk  (control mesh file)
+(2) Input: controlmesh.vtk  (control mesh file)
 	  bzmeshinfo.txt.epart.nparts (mesh partition file)
 	  bzpt.txt & cmat.txt (Bezier extraction information)
 	  velocity.txt (velocity field information)
 	  simulation_parameter.txt (parameter settings for the model)
-  Output: controlmesh_allparticle_*.vtk (Concentration for visualization)
+   Output: controlmesh_allparticle_*.vtk (Concentration for visualization)
 	  the output path name is set using all parameters value
 			
-(3)To compile: make (requires petsc 3.6.1: https://www.mcs.anl.gov/petsc/)
+(3) To compile: make (requires petsc 3.6.1: https://www.mcs.anl.gov/petsc/)
 
-(4)To run: mpiexec -np process_num ./transport meshfilepath process_num
+(4) To run: mpiexec -np process_num ./transport meshfilepath process_num
 		example: mpiexec -np 28 ./transport ../example/bifurcation/ 28
 
 The solver code uses parallel computation (MPI) to accelerate computation. 
 All result .vtk files are tested and can be opened in Paraview 5.4.0: https://www.paraview.org/
 
-In "./example" folder, we provide all the input files for generating the reults in our paper. For the single bifurcation neurite model,
+In "./example" folder, we provide all the input files for generating the results in our paper. For the single bifurcation neurite model,
 we provide all the intermediate output files in "./example/bifurcation/". User can use this model to learn how to run the whole package.
 
 

@@ -5,8 +5,8 @@ kplus 1.0
 kminus 0.0
 k'plus 0.1
 k'minus 0.0
-dt 0.01
-nstep 1000
-N0bc 2.0
-Nplusbc 1.0
+dt 0.1
+nstep 15
+N0bc 1.0
+Nplusbc 2.0
 Nminusbc 0.0

@@ -7,13 +7,13 @@ start_trees;
 
 % Input and output path setting
 % io_path='..//example//cylinder//'; % Figure 3E
-io_path='..//example//bifurcation//'; % Figure 3F
+% io_path='..//example//bifurcation//'; % Figure 3F
 % io_path='..//example//3bifurcation//'; % Figure 3G
 % io_path='..//example//movie2//'; % Figure 5
 % io_path='..//example//movie5//'; % Figure 6
-% io_path='..//example//cell3traceRN1//';% Figure 7A
-% io_path='..//example//nelson2//';% Figure 7D
-% io_path='..//example//purkinje//';% Figure 7G
+io_path='..//example//NMO_66731//';% Figure 7A
+% io_path='..//example//NMO_66748//';% Figure 7D
+% io_path='..//example//NMO_00865//';% Figure 7G
 
 parameter_file=[io_path,'mesh_parameter.txt'];
 skeleton_input=[io_path,'skeleton_smooth.swc'];
@@ -605,15 +605,31 @@ if n_bif~=0
         end
         % bif-bif segments
         sec_vec_start=Segment_Vector{index_start_pt,id(index_start_pt)};
-        sec_vec_end=Segment_Vector{index_end_pt,id(index_end_pt)};
+        
+%         sec_vec_end=Segment_Vector{index_end_pt,id(index_end_pt)};
+        sec_vec_end=Segment_Vector{find(trees{1}.dA(:,index_end_pt)),index_end_pt};
+        
         ref_vec_start=NodeLayer{index_start_pt,4};
         ref_vec_end=NodeLayer{index_end_pt,4};
         
-        rotate_axis=cross(ref_vec_start,ref_vec_end);
-        angle_total=acos(dot(ref_vec_start,ref_vec_end)/norm(ref_vec_start)/norm(ref_vec_end));
+        n_start=cross(ref_vec_start,cross(sec_vec_start,ref_vec_start));
+        n_start=n_start/norm(n_start);
+        
+        n_end=cross(ref_vec_end,cross(sec_vec_end,ref_vec_end));
+        n_end=n_end/norm(n_end);
+        
+        ref_vec_start2end=RotateSurface(ref_vec_start,n_start,n_end);
+        rotate_axis=cross(ref_vec_start2end,ref_vec_end);rotate_axis=rotate_axis/norm(rotate_axis);
+        angle_total=acos(dot(ref_vec_start2end,ref_vec_end)/norm(ref_vec_start2end)/norm(ref_vec_end));
+        
+%         rotate_axis=cross(ref_vec_start,ref_vec_end);
+%         angle_total=acos(dot(ref_vec_start,ref_vec_end)/norm(ref_vec_start)/norm(ref_vec_end));
+        
         if angle_total>pi/4 && angle_total<=3*pi/4
             angle_total=angle_total-pi/2;
-            if dot(rotate_axis,sec_vec_end)>0
+%             if dot(rotate_axis,sec_vec_end)>0
+                if dot(rotate_axis,n_end)>0
+%                     if dot(rotate_axis,[0 0 1])>0
                 for index_ele=1:m2/4
                     tmp_end_element(index_ele+m2/4*0,:)=NodeLayer{index_end_pt,2}(index_ele+m2/4*3,[3 4 1 2]);
                     tmp_end_element(index_ele+m2/4*1,:)=NodeLayer{index_end_pt,2}(index_ele+m2/4*0,:);
@@ -621,7 +637,9 @@ if n_bif~=0
                     tmp_end_element(index_ele+m2/4*3,:)=NodeLayer{index_end_pt,2}(index_ele+m2/4*2,:);
                 end
                 NodeLayer{index_end_pt,3}=tmp_end_element;
-            elseif dot(rotate_axis,sec_vec_end)<0
+%             elseif dot(rotate_axis,sec_vec_end)<0
+                elseif dot(rotate_axis,n_end)<0
+%                     elseif dot(rotate_axis,[0 0 1])<0
                 for index_ele=1:m2/4
                     tmp_end_element(index_ele+m2/4*0,:)=NodeLayer{index_end_pt,2}(index_ele+m2/4*1,:);
                     tmp_end_element(index_ele+m2/4*1,:)=NodeLayer{index_end_pt,2}(index_ele+m2/4*2,[3 4 1 2]);
@@ -643,34 +661,28 @@ if n_bif~=0
         
         angle_per=angle_total/(n_insert_layer+1);
         
-        fprintf('sec_index=%d angle_total=%f angle_per=%f\n',index_sec,angle_total*180/pi,angle_per*180/pi);
+        fprintf('sec_index=%d angle_total=%f angle_per=%f dot(rotate_axis,n_end)=%f\n',index_sec,angle_total*180/pi,angle_per*180/pi,dot(rotate_axis,n_end));
         
-        w=cross(sec_vec_start,ref_vec_start); w=w/norm(w);
-        ref_vec_next=ref_vec_start/norm(ref_vec_start);
+        ref_temp2start=RotateSurface([1 0 0],[0 0 1],n_start);
+        rotate_axis_start=cross( ref_temp2start, ref_vec_start);
+        angle_start=acos(dot(ref_temp2start,ref_vec_start)/norm(ref_vec_start)/norm(ref_temp2start));
         for index_sec_pt=2:sect_ptnum-1
             j=bif_term_pt{index_sec}(index_sec_pt-1);
             i=bif_term_pt{index_sec}(index_sec_pt);
             sv=Segment_Vector{i,j};
             
-            ref_vec_next=cross(w,sv); ref_vec_next=ref_vec_next/norm(ref_vec_next);
-            w=cross(sv,ref_vec_next);w=w/norm(w);
-            for ii=1:m1
-                tmp_p(ii,:)=template_p(ii,1)*ref_vec_next+template_p(ii,2)*w;
+            tmp_p=template_p*d(i)/2.;
+            
+            tmp_p=RotateSurface(tmp_p,[0 0 1],n_start);                
+            tmp_p=RotateAroundAxis(tmp_p,rotate_axis_start,angle_start);
+            
+            if dot(rotate_axis,n_end)>0
+                tmp_p=RotateAroundAxis(tmp_p,n_start,angle_per*(index_sec_pt-1));
+            elseif dot(rotate_axis,n_end)<0
+                tmp_p=RotateAroundAxis(tmp_p,-n_start,angle_per*(index_sec_pt-1));
             end
-            tmp_p=tmp_p*d(i)/2.;
-            
-            
-            if angle_total~=0
-                tmp_p=RotateAroundAxis(tmp_p,sv,angle_per*(index_sec_pt-1));
-            else
-                tmp_p=tmp_p;
-            end
-            
-            
-            for ii=1:m1
-                tmp_p(ii,:)=template_p(ii,1)*ref_vec_next+template_p(ii,2)*w;
-            end
-            tmp_p=tmp_p*d(i)/2.;
+            tmp_p=RotateSurface(tmp_p,n_start,sv);        
+
             
             [tmp_pointnumber,tmp]=size(AllPoint);
             
@@ -697,6 +709,67 @@ if n_bif~=0
         end
     end
 else
+    %deal with pipe geometry (without any bifurcation)
+    [sect_ptnum,tmp]=size(bif_term_pt{1}');
+    index_start_pt=bif_term_pt{1}(1);
+    index_end_pt=bif_term_pt{1}(sect_ptnum);
+    n_insert_layer=sect_ptnum;
+    
+    for index_sec_pt=1:sect_ptnum
+        if index_sec_pt==1
+            j=bif_term_pt{index_sec}(1);
+            i=bif_term_pt{index_sec}(2);
+            sv=Segment_Vector{i,j};
+            ref_vec_start=RotateSurface([1,0,0],[0 0 1],sv);
+            ref_vec_next=ref_vec_start/norm(ref_vec_start);
+            w=cross(sv,ref_vec_start); w=w/norm(w);
+            i=1;
+        else
+            j=bif_term_pt{index_sec}(index_sec_pt-1);
+            i=bif_term_pt{index_sec}(index_sec_pt);
+            sv=Segment_Vector{i,j};
+        end
+              
+        ref_vec_next=cross(w,sv); ref_vec_next=ref_vec_next/norm(ref_vec_next);
+        w=cross(sv,ref_vec_next);w=w/norm(w);
+        
+        tmp_p=template_p*d(i)/2.;
+        if index_sec_pt==1
+            tmp_p=RotateSurface(tmp_p,[0 0 1],sv);
+        else
+            for ii=1:m1
+                tmp_p(ii,:)=tmp_p(ii,1)*ref_vec_next+tmp_p(ii,2)*w;
+            end
+        end
+        
+        [tmp_pointnumber,tmp]=size(AllPoint);
+        
+        tmp_label=ones(m1,1);
+        if index_sec_pt==sect_ptnum || index_sec_pt==1
+            tmp_label=tip_label*tmp_label;
+            tip_label=tip_label+1;
+        else
+            tmp_label=in_point_label*tmp_label;
+        end
+        tmp_label(boundary_point_index,:)=wall_label;
+        
+        for inode=1:m1
+            tmp_p(inode,:)= tmp_p(inode,:)+location(i,:)-location(1,:);
+        end
+        for ii=1:m1
+            tmp_veloctity(ii,1:3)=sv/norm(sv)*norm(velocity_value(ii));
+        end
+        AllVelocity=[AllVelocity; tmp_veloctity];
+        AllPoint=[AllPoint;tmp_p];
+        AllLabel=[AllLabel;tmp_label];
+        for k=1:m2
+            tmp_e(k,1:4)=template_e(k,2:5)+tmp_pointnumber*[1,1,1,1];
+        end
+        LayerElement=[LayerElement;tmp_e(:,1:4)];
+        NodeLayer{i,1}=tmp_p;
+        NodeLayer{i,2}=tmp_e(:,1:4);
+        NodeLayer{i,3}=tmp_e(:,1:4);
+    end
 end
 
 %% Calculate the points and index of the layers in each segment

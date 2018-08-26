@@ -7,13 +7,13 @@ start_trees;
 
 % Input and output path setting
 % io_path='..//example//cylinder//'; % Figure 3E
-io_path='..//example//bifurcation//'; % Figure 3F
+% io_path='..//example//bifurcation//'; % Figure 3F
 % io_path='..//example//3bifurcation//'; % Figure 3G
 % io_path='..//example//movie2//'; % Figure 5
 % io_path='..//example//movie5//'; % Figure 6
-% io_path='..//example//cell3traceRN1//';% Figure 7A
-% io_path='..//example//nelson2//';% Figure 7D
-% io_path='..//example//purkinje//';% Figure 7G
+io_path='..//example//NMO_66731//';% Figure 7A
+% io_path='..//example//NMO_66748//';% Figure 7D
+% io_path='..//example//NMO_00865//';% Figure 7G
 
 parameter_file=[io_path,'mesh_parameter.txt'];
 input_file=[io_path,'skeleton_initial.swc'];
@@ -137,6 +137,9 @@ for i=1:n_sect
         mode=2;
     elseif(start_index==1)
         mode=3;
+    end
+    if n_bif==0
+        mode=4;
     end
     [tmp_XYZ,tmp_D, tmp_tangent]=BsplineSmooth(location(sect_point{i},:),d(sect_point{i}),seg_length ,mode);
     [n_insert,tmp]=size(tmp_D);
