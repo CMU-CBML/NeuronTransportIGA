@@ -18,7 +18,7 @@ User should follow the steps to finish the whole simulation workflow:
 * **Input:**
     * *.swc (neuron skeleton information)   
     * mesh_parameter.txt (parameter settings for generating the mesh)
- * **Output:**
+* **Output:**
     * controlmesh.vtk (control mesh file)
 * **To run:**
 1. Download [TREES toolbox](http://www.treestoolbox.org/) and put it inside the meshgeneration directory.
@@ -27,7 +27,7 @@ User should follow the steps to finish the whole simulation workflow:
 * **Notes:**
 1. The neuron skeleton dataset can be downloaded from [NeuroMorpho.org](http://neuromorpho.org/). Before using the downloaded dataset, user needs to visualize the skeleton using TREES Toolbox and check the skeleton to make sure the geometry only has bifurcation structure and has no overlap. The bad geometry needs manual modifying right away.
 2. In *mesh_parameter.txt*, user need to set five parameters:
-    * n_noisesmooth:      set iteration steps for noise, default: 100
+    * n_noisesmooth:      set iteration steps for noise smoothing, default: 100
     * ratio_bifur_node:   set bifurcation nodes smooth ratio, range: 0 to 1
     * ratio_noisesmooth:  set noise smooth ratio, range: 0 to 1
     * seg_length:         set the Bezier smooth segments length, the value mainly depends on the neuron scale
@@ -42,8 +42,7 @@ User should follow the steps to finish the whole simulation workflow:
 * **Output:**
     * bzpt.txt (Bezier point information)
     * cmat.txt (The matrix from Bezier extraction)
-    * bzmeshinfo.txt (Bezier element connectivity, used for mesh partition)
-           
+    * bzmeshinfo.txt (Bezier element connectivity, used for mesh partition)         
 * **To compile:** (requires [Eigen](http://eigen.tuxfamily.org/index.php?title=Main_Page))
 
     ` >> make`
