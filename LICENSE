@@ -1,6 +1,6 @@
 BSD 3-Clause License
 
-Copyright (c) 2018, angranl
+Copyright (c) 2018, Carnegie Mellon University
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -16,6 +16,10 @@ modification, are permitted provided that the following conditions are met:
 * Neither the name of the copyright holder nor the names of its
   contributors may be used to endorse or promote products derived from
   this software without specific prior written permission.
+
+This work was supported in part by funding from the National Science Foundation 
+of the United States of America, and a collaborative research seed grant from 
+Department of Mechanical Engineering, Carnegie Mellon University.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
