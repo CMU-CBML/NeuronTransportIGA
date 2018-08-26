@@ -1,13 +1,13 @@
 # NeuronTransportIGA
 NeuronTransportIGA performs material transport simulation in complex geometry of neurons using isogeometric analysis (IGA)
 
-# Dependencies
+## Dependencies
 * [TREES toolbox](http://www.treestoolbox.org/)
 * [Eigen](http://eigen.tuxfamily.org/index.php?title=Main_Page)
 * [METIS](http://glaros.dtc.umn.edu/gkhome/metis/metis/overview)
 * [PETSc 3.6.1](https://www.mcs.anl.gov/petsc/)
 
-# User guide
+## User guide
 The package contains four subfolders for different stages of the simulation workflow. 
 User should follow the steps to finish the whole simulation workflow:
 
@@ -34,7 +34,7 @@ User should follow the steps to finish the whole simulation workflow:
     * ratio_refine:       set the parameter used to calculate the refinement around bifurcation region range: 0 to 1 
 3. To obtain a good quality mesh, user needs to try several parameter settings for mesh generation. User is recommended to check the scaled Jacobian of the mesh in Paraview before using it in simulation. It's better to make sure the minimum scaled Jacobian is bigger than 0.1.
           
-### 2.spline_src (C++)
+### 2. spline_src (C++)
 
 * **Description:** this code is used to construct B-spline and extract Bezier information for IGA based on the input controlmesh.
 * **Input:** 
@@ -46,20 +46,20 @@ User should follow the steps to finish the whole simulation workflow:
            
 * **To compile:** (requires [Eigen](http://eigen.tuxfamily.org/index.php?title=Main_Page))
 
-    `>> make`
+    ` >> make`
 
 
 * **To run:**
 
-   `>> ./spline <meshfilepath>` 
+   ` >> ./spline <meshfilepath>` 
 
-   (`meshfilepath` is the path that contains *controlmesh.vtk*)
+   `meshfilepath` is the path that contains *controlmesh.vtk*
 
    Example: 
 
    `>> ./spline ../example/bifurcation/`
 
-### 3.METIS (C++)
+### 3. METIS (C++)
 
 * **Description:**
     The open source library [METIS](http://glaros.dtc.umn.edu/gkhome/metis/metis/overview) is used to partition the mesh for parallel computing.
@@ -71,11 +71,15 @@ User should follow the steps to finish the whole simulation workflow:
 * **To run：**
     User can use the stand-alone program mpmetis in METIS library to partition a mesh into a specified number of parts.
     
+   ` >> mpmetis meshfile process_num` 
+     
+   `process_num` is the number of parts that the mesh will be partitioned info
+    
     Example:
     
     ` >> mpmetis ../example/bifurcation/bzmeshinfo.txt 28`
         
-### 4.nsvms_src (C++)
+### 4. nsvms_src (C++)
 
 * **Description:** this code is used to derive velocity field by solving incompressible steady-state Navier-Stokes equation. The code is paralleled using MPI to accelerate the computation.
                 
@@ -96,13 +100,15 @@ User should follow the steps to finish the whole simulation workflow:
 
 * **To run:**
 
-   `mpiexec -np process_num ./nsvms meshfilepath process_num`
+   ` >> mpiexec -np process_num ./nsvms meshfilepath process_num`
+   
+   `process_num` is the number of processors used in simulation
 
    Example:
 
-   `mpiexec -np 28 ./nsvms ../example/bifurcation/ 28`
+   ` >> mpiexec -np 28 ./nsvms ../example/bifurcation/ 28`
         
-### 5.transport_src (C++)
+### 5. transport_src (C++)
 * **Description:** this code is used to perform transport simulation and obtain concentration result.
         The code is paralleled using MPI to accelerate the computation. 
                 
@@ -119,15 +125,17 @@ User should follow the steps to finish the whole simulation workflow:
             
 * **To compile:** (requires [PETSc 3.6.1](https://www.mcs.anl.gov/petsc/))
 
-   ` >>make`  
+   ` >> make`  
 
 * **To run:**
 
-   ` mpiexec -np process_num ./transport meshfilepath process_num`
+   ` >> mpiexec -np process_num ./transport meshfilepath process_num`
+   
+   `process_num` is the number of processors used in simulation
 
    Example: 
 
-   `mpiexec -np 28 ./transport ../example/bifurcation/ 28`
+   ` >> mpiexec -np 28 ./transport ../example/bifurcation/ 28`
 
 The solver code uses parallel computation (MPI) to accelerate computation. 
 All result .vtk files are tested and can be opened in [Paraview 5.4.0](https://www.paraview.org/)
