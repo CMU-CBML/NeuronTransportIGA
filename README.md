@@ -25,7 +25,7 @@ User should follow the steps to finish the whole simulation workflow:
 2. Use *TreeSmooth.m* as the code for smoothing neuron skeleton and generate *\*_smooth.swc* file. User need to set smooth parameters in *mesh_parameter.txt* and input/output path in *TreeSmooth.m*.
 3. Use *Hexmesh_main.m* as the code to generate the mesh for smoothed skeleton. User need to set bifurcation refinement parameters in *mesh_parameter.txt* and input/output path in *Hexmesh_main.m*.
 * **Notes:**
-1. The neuron skeleton dataset can be downloaded from *[NeuroMorpho.org](http://neuromorpho.org/)*. Before using the downloaded dataset, user needs to visualize the skeleton using TREES Toolbox and check the skeleton to make sure the geometry only has bifurcation structure and has no overlap. The bad geometry needs manual modifying right away.
+1. The neuron skeleton dataset can be downloaded from *[NeuroMorpho.org](http://neuromorpho.org/)*. Before using the downloaded dataset, user needs to visualize the skeleton using TREES Toolbox and check the skeleton to make sure the geometry only has bifurcation structure and has no overlap. The bad geometry needs manually modifying before smoothing.
 2. In *mesh_parameter.txt*, user need to set five parameters:
     * n_noisesmooth:      set iteration steps for noise smoothing, default: 100
     * ratio_bifur_node:   set bifurcation nodes smooth ratio, range: 0 to 1
