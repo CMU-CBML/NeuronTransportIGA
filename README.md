@@ -75,7 +75,7 @@ User should follow the steps to finish the whole simulation workflow:
     
     Example:
     
-    ` >> mpmetis ../example/bifurcation/bzmeshinfo.txt 28`
+    ` >> mpmetis bzmeshinfo.txt 28`
         
 ### 4. nsvms_src (C++)
 
