@@ -78,19 +78,15 @@ void UserSetting::SetInitialCondition(vector<Vertex3D>& pts, vector<double>& var
 
 	for (int i = 0; i < npts; i++)
 	{
+		//Default Initial Conditions
 		if (pts[i].label == 1)
 		{
 			N0_ini[i] = var[9];
 			Nplus_ini[i] = var[10];
 			Nminus_ini[i] = var[11];
 		}
-		////cylinder ICs
-		//if (label[i] == 1 && (sqrt(pts[i][1] * pts[i][1] + pts[i][2] * pts[i][2]) < 0.49))//income
-		//{
-		//	CA0[i] = 1.0;
-		//	NX0[i] = 2.0;
-		//}
 
+		///Initial conditions for photoactivation experiment verification
 		////movie2 photoactivation ICs
 		//if (pts[i][0] <17.5)
 		//{
