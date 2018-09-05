@@ -817,7 +817,7 @@ void Transport::Run(const vector<Vertex3D>& cpts, const vector<array<double, 3>>
 
 		MPI_Barrier(comm);
 
-		PetscPrintf(PETSC_COMM_WORLD, "Solving...\n");
+		
 		/*Petsc solver setting*/
 		if (judge == 0)	{
 			KSPCreate(PETSC_COMM_WORLD, &ksp);
@@ -837,8 +837,9 @@ void Transport::Run(const vector<Vertex3D>& cpts, const vector<array<double, 3>>
 
 		t0 = time(NULL);
 		KSPView(ksp, PETSC_VIEWER_STDOUT_WORLD);
-		KSPSolve(ksp, GR, temp_solution);
 		PetscPrintf(PETSC_COMM_WORLD, "------------------------------\n");
+		PetscPrintf(PETSC_COMM_WORLD, "Solving...\n");
+		KSPSolve(ksp, GR, temp_solution);
 		PetscInt its;
 		KSPGetIterationNumber(ksp, &its);
 		PetscPrintf(PETSC_COMM_WORLD, "iterations %d\n", its);
