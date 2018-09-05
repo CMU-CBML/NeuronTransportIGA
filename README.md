@@ -109,11 +109,9 @@ User should follow the steps to finish the whole simulation workflow:
 ### 5. transport_src (C++)
 * **Description:** this code is used to perform transport simulation and obtain concentration result.
         The code is paralleled using MPI to accelerate the computation. 
-<<<<<<< HEAD
-=======
-	
+
 	User can define the initial condition in `UserSetting::SetInitialCondition` function in *UserSetting.cpp* and compile again to apply settings.
->>>>>>> a074f9422c40ac86bb38181f65bd39338c3f1db3
+
                 
 * **Input:**
     * controlmesh.vtk  (control mesh file)

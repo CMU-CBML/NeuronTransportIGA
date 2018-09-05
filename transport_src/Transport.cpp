@@ -520,38 +520,6 @@ void Transport::BuildLinearSystemProcess(const vector<Element3D>& tmesh, const v
 				ApplyBoundaryCondition(Nplus_bc, i, 1, EMatrixSolve, EVectorSolve);
 			}
 
-			//movie2 photoactivation BCs
-			//if (A<201)
-			//{
-			//	N0_bc = 0.0;
-			//	ApplyBoundaryCondition(N0_bc, i, 0, EMatrixSolve, EVectorSolve);
-			//	Nplus_bc = 0.0;
-			//	ApplyBoundaryCondition(Nplus_bc, i, 1, EMatrixSolve, EVectorSolve);
-			//}
-			//if (A>=2412 && A<2613)
-			//{
-			//	N0_bc = 0.0;
-			//	ApplyBoundaryCondition(N0_bc, i, 0, EMatrixSolve, EVectorSolve);
-			//	Nplus_bc = 0.0;
-			//	ApplyBoundaryCondition(Nplus_bc, i, 1, EMatrixSolve, EVectorSolve);
-			//}
-
-			//////movie5 photoactivation BCs
-			//if (A<201)
-			//{
-			//	N0_bc = 0.0;
-			//	ApplyBoundaryCondition(N0_bc, i, 0, EMatrixSolve, EVectorSolve);
-			//	Nplus_bc = 0.0;
-			//	ApplyBoundaryCondition(Nplus_bc, i, 1, EMatrixSolve, EVectorSolve);
-			//}
-			//if ((A >= 25821 && A <= 26021) || (A >= 16374 && A <= 16574))
-			//{
-			//	N0_bc = 0.0;
-			//	ApplyBoundaryCondition(N0_bc, i, 0, EMatrixSolve, EVectorSolve);
-			//	Nplus_bc = 0.0;
-			//	ApplyBoundaryCondition(Nplus_bc, i, 1, EMatrixSolve, EVectorSolve);
-			//}
-
 		}
 		ResidualAssembly(EVectorSolve, bzmesh_process[e].IEN, GR);
 		if (judge == 0) //The matrix is the same, so only need to assembly once

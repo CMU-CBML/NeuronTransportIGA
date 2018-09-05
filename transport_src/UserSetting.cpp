@@ -78,69 +78,65 @@ void UserSetting::SetInitialCondition(vector<Vertex3D>& pts, vector<double>& var
 
 	for (int i = 0; i < npts; i++)
 	{
+		/// Default initial condition
 		if (pts[i].label == 1)
 		{
 			N0_ini[i] = var[9];
 			Nplus_ini[i] = var[10];
 			Nminus_ini[i] = var[11];
 		}
-		////cylinder ICs
-		//if (label[i] == 1 && (sqrt(pts[i][1] * pts[i][1] + pts[i][2] * pts[i][2]) < 0.49))//income
-		//{
-		//	CA0[i] = 1.0;
-		//	NX0[i] = 2.0;
-		//}
 
+		/// Initial condition for photoactivation experiment verification
 		////movie2 photoactivation ICs
-		//if (pts[i][0] <17.5)
+		//if (pts[i].coor[0] <17.5)
 		//{
-		//	CA0[i] = 1.0 * pow(abs(pts[i][0] / 17.5), 1.3);
-		//	NX0[i] = 2.0 * pow(abs(pts[i][0] / 17.5), 1.3);
+		//	CA0[i] = 1.0 * pow(abs(pts[i].coor[0] / 17.5), 1.3);
+		//	NX0[i] = 2.0 * pow(abs(pts[i].coor[0] / 17.5), 1.3);
 		//}
-		//if (pts[i][0]>=17.5 && pts[i][0]<18.5)
+		//if (pts[i].coor[0]>=17.5 && pts[i].coor[0]<18.5)
 		//{
 		//	CA0[i] = 1.0;
 		//	NX0[i] = 2.0;
 		//}
-		//if (pts[i][0] > 18.5)
+		//if (pts[i].coor[0] > 18.5)
 		//{
-		//	CA0[i] = 1.0 - 0.85 / 15.5*(pts[i][0] - 18.5);
-		//	NX0[i] = 2.0 - 1.70 / 15.5*(pts[i][0] - 18.5);
-		//	//NX0[i] = 1.0 - 0.85 / 17*(pts[i][0] - 17);
-		//	//CA0[i] = 2.0 - 1.70 / 17*(pts[i][0] - 17);
+		//	CA0[i] = 1.0 - 0.85 / 15.5*(pts[i].coor[0] - 18.5);
+		//	NX0[i] = 2.0 - 1.70 / 15.5*(pts[i].coor[0] - 18.5);
+		//	//NX0[i] = 1.0 - 0.85 / 17*(pts[i].coor[0] - 17);
+		//	//CA0[i] = 2.0 - 1.70 / 17*(pts[i].coor[0] - 17);
 		//}
 
 		////movie5 photoactivation ICs
-		//if (pts[i][0] <16.5)
+		//if (pts[i].coor[0] <16.5)
 		//{
-		//	CA0[i] = 1.0 * pow(pts[i][0] / 16.5, 2.0);
-		//	NX0[i] = 2.0 * pow(pts[i][0] / 16.5, 2.0);
+		//	CA0[i] = 1.0 * pow(pts[i].coor[0] / 16.5, 2.0);
+		//	NX0[i] = 2.0 * pow(pts[i].coor[0] / 16.5, 2.0);
 		//}
-		//if (pts[i][0]>16.5 && pts[i][0]<17.5)
+		//if (pts[i].coor[0]>16.5 && pts[i].coor[0]<17.5)
 		//{
 		//	CA0[i] = 1.0;
 		//	NX0[i] = 2.0;
 		//}
-		//if (pts[i][0] > 17.5 && pts[i][0]<25.5)
+		//if (pts[i].coor[0] > 17.5 && pts[i].coor[0]<25.5)
 		//{
-		//	CA0[i] = 1.0  * pow((31 - pts[i][0]) / 13.5, 1.5);
-		//	NX0[i] = 2.0  * pow((31 - pts[i][0]) / 13.5, 1.5);
-		//	//NX0[i] = 1.0 - 0.85 / 17*(pts[i][0] - 17);
-		//	//CA0[i] = 2.0 - 1.70 / 17*(pts[i][0] - 17);
+		//	CA0[i] = 1.0  * pow((31 - pts[i].coor[0]) / 13.5, 1.5);
+		//	NX0[i] = 2.0  * pow((31 - pts[i].coor[0]) / 13.5, 1.5);
+		//	//NX0[i] = 1.0 - 0.85 / 17*(pts[i].coor[0] - 17);
+		//	//CA0[i] = 2.0 - 1.70 / 17*(pts[i].coor[0] - 17);
 		//}
-		//if (pts[i][0] > 25.5 && pts[i][0]<31.0 && pts[i][1] <= -3.0)
+		//if (pts[i].coor[0] > 25.5 && pts[i].coor[0]<31.0 && pts[i].coor[1] <= -3.0)
 		//{
-		//	CA0[i] = 1.0  * pow((31 - pts[i][0]) / 13.5, 1.5);
-		//	NX0[i] = 2.0  * pow((31 - pts[i][0]) / 13.5, 1.5);
-		//	//NX0[i] = 1.0 - 0.85 / 17*(pts[i][0] - 17);
-		//	//CA0[i] = 2.0 - 1.70 / 17*(pts[i][0] - 17);
+		//	CA0[i] = 1.0  * pow((31 - pts[i].coor[0]) / 13.5, 1.5);
+		//	NX0[i] = 2.0  * pow((31 - pts[i].coor[0]) / 13.5, 1.5);
+		//	//NX0[i] = 1.0 - 0.85 / 17*(pts[i].coor[0] - 17);
+		//	//CA0[i] = 2.0 - 1.70 / 17*(pts[i].coor[0] - 17);
 		//}
-		//if (pts[i][0] > 25.5 && pts[i][0]<32.5 && pts[i][1]>-3.0)
+		//if (pts[i].coor[0] > 25.5 && pts[i].coor[0]<32.5 && pts[i].coor[1]>-3.0)
 		//{
-		//	CA0[i] = 0.26*1.0* pow((32.5 - pts[i][0]) / 7.0, 2.5);
-		//	NX0[i] = 0.26*2.0* pow((32.5 - pts[i][0]) / 7.0, 2.5);
-		//	//NX0[i] = 1.0 - 0.85 / 17*(pts[i][0] - 17);
-		//	//CA0[i] = 2.0 - 1.70 / 17*(pts[i][0] - 17);
+		//	CA0[i] = 0.26*1.0* pow((32.5 - pts[i].coor[0]) / 7.0, 2.5);
+		//	NX0[i] = 0.26*2.0* pow((32.5 - pts[i].coor[0]) / 7.0, 2.5);
+		//	//NX0[i] = 1.0 - 0.85 / 17*(pts[i].coor[0] - 17);
+		//	//CA0[i] = 2.0 - 1.70 / 17*(pts[i].coor[0] - 17);
 		//}
 	}
 }
