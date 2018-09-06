@@ -36,7 +36,7 @@ User should follow the steps to finish the whole simulation workflow:
           
 ### 2. spline_src (C++)
 
-* **Description:** this code is used to construct B-spline and extract Bezier information for IGA based on the input controlmesh.
+* **Description:** this code is used to construct truncated hierarchical tricubic spline and extract Bezier information for IGA based on the input controlmesh.
 * **Input:**
     * controlmesh.vtk (control mesh file)
 * **Output:**
