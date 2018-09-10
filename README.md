@@ -69,7 +69,7 @@ User should follow the steps to finish the whole simulation workflow:
 * **To run：**
     User can use the stand-alone program mpmetis in METIS library to partition a mesh into a specified number of parts.
     
-   ` >> mpmetis meshfile process_num` 
+   ` >> mpmetis <meshfile> process_num` 
      
    `process_num` is the number of parts that the mesh will be partitioned info
     
@@ -98,7 +98,7 @@ User should follow the steps to finish the whole simulation workflow:
 
 * **To run:**
 
-   ` >> mpiexec -np process_num ./nsvms meshfilepath process_num`
+   ` >> mpiexec -np process_num ./nsvms <meshfilepath> process_num`
    
    `process_num` is the number of processors used in simulation
 
@@ -130,7 +130,7 @@ User should follow the steps to finish the whole simulation workflow:
 
 * **To run:**
 
-   ` >> mpiexec -np process_num ./transport meshfilepath process_num`
+   ` >> mpiexec -np process_num ./transport <meshfilepath> process_num`
    
    `process_num` is the number of processors used in simulation
 
