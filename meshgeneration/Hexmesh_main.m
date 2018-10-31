@@ -11,9 +11,9 @@ start_trees;
 % io_path='..//example//3bifurcation//'; % Figure 3G
 % io_path='..//example//movie2//'; % Figure 5
 % io_path='..//example//movie5//'; % Figure 6
-io_path='..//example//NMO_66731//';% Figure 7A
+% io_path='..//example//NMO_66731//';% Figure 7A
 % io_path='..//example//NMO_66748//';% Figure 7D
-% io_path='..//example//NMO_00865//';% Figure 7G
+io_path='..//example//NMO_00865//';% Figure 7G
 
 parameter_file=[io_path,'mesh_parameter.txt'];
 skeleton_input=[io_path,'skeleton_smooth.swc'];
